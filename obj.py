@@ -23,8 +23,8 @@ class Object() :
             self.lines= file.read().splitlines()
         self.readFile()
         # self.printMe()
-        if textureFileName !=None:
-            self.texture= Texture(self.textureFilename)
+        # if textureFileName !=None:
+        #     self.texture= Texture(self.textureFilename)
             
         self.printMe()
         
