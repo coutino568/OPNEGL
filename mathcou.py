@@ -1,8 +1,11 @@
 
+import numpy as np
+
+import math
+
 #para multiplicaciones de dos matrices
 def matrixMultiplication(matrix1, matrix2):
-    # print(matrix1)
-    # print(matrix2)
+    
     result =  [[0 for x in range(len(matrix1))] for y in range(len(matrix2[0]))]
     
     if(len(matrix1[0])== len(matrix2)):
@@ -12,53 +15,47 @@ def matrixMultiplication(matrix1, matrix2):
             for j in range(len(matrix2[0])):
                 for k in range(len(matrix2)):
                     result[i][j] += matrix1[i][k] * matrix2[k][j]
-                # local=0
-                # value1= matrix1[j][j] * matrix2[j][i]
-                # value2= matrix1[][j] * matrix2[j][i]
-                # value3= matrix1[j][j]*matrix2[j][i]
-                # result = value1+value2+value3
-        # print(result)
                 
+        return result     
         
     
     else:
         print("Tamaño Invalido")
     
+def degreesToRad(angle):
+    return (math.pi*angle) / 180
 
+def vectorAndScalarMultiplication (Vector, Scalar):
+    result= []
+    for i in range (0,len(Vector)):
+        result.append(Vector[i]*Scalar)
+    return result
 
 
 #para operacion de un vectori y una matriz
 def matrixVectorMultiplication (matrix, vector):
+    result2= [0 for t in  range(len(matrix))]
     
-    result =[[0 for i in range (len(matrix))] for j in range (len(matrix[0]))]
-    print(result)
+    # print(result)
+    
     if(len(vector)==len(matrix[0])):
         #print("Tamaño valido")
+        
         for i in range(len(matrix)):
+            #rowresult=0
+            temp =0
             for j in range(len(matrix[0])):
-                result[i][j] = matrix[i][j]*vector[j]
+                temp= temp+ (matrix[i][j]*vector[j])
+            result2[i] = temp
+            
+        return result2       
                 
-                
-                
-        print(result)        
+        # print(result)        
     else:
         print("Tamaño invlaido")
+        
 
 
-# matrix1= [[5,2,4],[2,1,1],[1,2,3]]
-# matrix2 = [[1,0,2],[4,3,1],[2,0,3]]
-
-# matrix3= [[12,7],[4 ,0]]
-# matrix4= [[5,2],[6,0]]
-
-# vector1 = [100,0,0.00001]
-
-# resultadoMatrices= matrixMultiplication(matrix1,matrix2)
-#resultado esperado: [102,24 ] [20,8]
-# resultadoMatrices= matrixMultiplication(matrix3,matrix4)
-
-# #resultado esperado
-# resultadoMatrices= matrixVectorMultiplication(matrix1,vector1)
 
 
 def dotProduct (Vector1, Vector2):
@@ -74,7 +71,36 @@ def dotProduct (Vector1, Vector2):
     
     
 # print(dotProduct([1,3],[5,4]))
+
+def subtract(Vector1, Vector2) :
+    if len(Vector1) == len(Vector2):
+        result = []
+        for i in range(len(Vector1)):
+            result.append(Vector1[i]-Vector2[i])
+        return result
+        
+    else:
+        return []
+
+##solo funcionara para vectorees de 2 o 3
+def cross(Vector1,Vector2):
+    if len(Vector1) == len(Vector2):
+        
+        if len(Vector1)==2:
+            result = (Vector1[0]*Vector2[1]) - (Vector1[1]*Vector2[0])
+            
+            return result
+        else:
+            if len(Vector1)==3:
+                result = [(Vector1[1]*Vector2[2] - Vector1[2]*Vector2[1]),(Vector1[2]*Vector2[0] - Vector1[0]*Vector2[2]), (Vector1[0]*Vector2[1] - Vector1[1]*Vector2[0])]
+                return result
+        
+        
+        
+    else:
+        return []
     
+
 
 def baricentricCoordinates(A, B, C, P):
     
@@ -83,9 +109,33 @@ def baricentricCoordinates(A, B, C, P):
     APC_Area= getAreaOfTiangle(A,P,C)
     ABP_Area= getAreaOfTiangle(A,B,P)
     
-    if PBC_Area ==0 or ABC_Area ==0 or ABP_Area ==0 or APC_Area ==0:   
+    
+    if ABC_Area ==0:
+        u= 0
+        v= 0
+        w= 0
+        return u,v,w
+    
+    if PBC_Area ==0 :
+        u= 0
+        v= APC_Area/ABC_Area
+        w=  ABP_Area/ ABC_Area
+        return u,v,w
+    
+    
+    if ABP_Area ==0:
+        u= PBC_Area/ABC_Area
+        v= APC_Area/ABC_Area
+        w=  0
+        return u,v,w
+    
+    if APC_Area ==0: 
+        u= PBC_Area/ABC_Area
+        v= 0
+        w= ABP_Area/ ABC_Area  
+        return u,v,w
         
-        return 0,0,0
+    
         
     else :
         u= PBC_Area/ABC_Area
@@ -93,10 +143,30 @@ def baricentricCoordinates(A, B, C, P):
         w=  ABP_Area/ ABC_Area
     
     
-        return u,v,w
+    return u,v,w
     
     
     
+def normalize(Vector):
+    magnitude= 0
+    if(len(Vector)==1):
+        return Vector[0]
+    elif len(Vector)==2:
+        magnitude= math.sqrt(Vector[0]*Vector[0] +Vector[1]*Vector[1])
+        return [Vector[0]/ magnitude, Vector[1]/magnitude]
+    elif len(Vector)==3:
+        magnitude= math.sqrt(Vector[0]*Vector[0] +Vector[1]*Vector[1] +Vector[2]*Vector[2])
+        return [Vector[0]/ magnitude, Vector[1]/magnitude,Vector[2]/magnitude]
+    
+def getmagnitude(Vector):
+    magnitude= 0
+    if(len(Vector)==1):
+        return Vector[0]
+    elif len(Vector)==2:
+        return math.sqrt(Vector[0]*Vector[0] +Vector[1]*Vector[1])
+         
+    elif len(Vector)==3:
+        return math.sqrt(Vector[0]*Vector[0] +Vector[1]*Vector[1] +Vector[2]*Vector[2])
     
     
 def getAreaOfTiangle(A,B,C):
@@ -108,3 +178,4 @@ def getAreaOfTiangle(A,B,C):
     
     
     return result
+

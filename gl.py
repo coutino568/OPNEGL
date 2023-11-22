@@ -1,5 +1,5 @@
 import glm
-
+from mathcou import normalize
 from OpenGL.GL import*
 
 from OpenGL.GL.shaders import compileProgram, compileShader
@@ -25,16 +25,16 @@ class Renderer(object):
         
         self.activeShader = None
         
-        self.camPosition = glm.vec3(0,0,0)
+        self.camPosition = glm.vec3(0,0,-1)
         self.camRotation = glm.vec3(0,0,0)
         self.viewMatrix = self.getViewMatrix()
-        self.light = glm.vec3(0.3,-0.5,0)
+        self.light = glm.vec3(0.2,-0.5,0.3)
         
         self.projectionMatrix = glm.perspective(glm.radians(60),self.width / self.height,0.1,1000)
         
         
     def update(self):
-        self.getViewMatrix = glm.lookAt(self.camPosition, self.target, glm.vec3(0,1,0))
+        self.viewMatrix = glm.lookAt(self.camPosition, self.target, glm.vec3(0,1,0))
          
     
     def getViewMatrix(self):
@@ -71,7 +71,7 @@ class Renderer(object):
             
             glUniform1i(glGetUniformLocation(self.activeShader,"tex"),0)
             glUniform1f(glGetUniformLocation(self.activeShader,"time"),self.elapsedTime)
-            
+            self.light= glm.normalize(self.light)
             glUniform3fv(glGetUniformLocation(self.activeShader,"light"),1,glm.value_ptr(self.light))
         
         

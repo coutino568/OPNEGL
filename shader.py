@@ -45,7 +45,7 @@ void main()
 {
     float intensity = dot(outNormals, -light);
     float intensity2= min(1, intensity);
-    float intensity3= max(0.1,intensity2);
+    float intensity3= max(0.2,intensity2);
     fragcolor = texture( tex, UVs)* intensity3;
     
 }

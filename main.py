@@ -6,6 +6,7 @@ import glm
 
 from buffer import Buffer
 import pygame
+from pygame.locals import *
 from model import Model
 from gl import Renderer
 from math import cos,sin,tan,radians
@@ -13,12 +14,12 @@ from shader import *
 
 
 
-width = 500
-height = 500
+width = 1000
+height = 1000
 
 pygame.init()
 screen = pygame.display.set_mode((width,height), pygame.DOUBLEBUF | pygame.OPENGL )
-
+pygame.display.set_caption('OPEN GL RENDERER')
 rend= Renderer(screen)
 
 clock = pygame.time.Clock()
@@ -26,13 +27,9 @@ clock = pygame.time.Clock()
 rend.setShaders(vertex_shader, fragment_shader)
 
 
-#primero van los vertices, despues las uvs/texcords y despues las normales
-triangle =[-0.5,-0.5,0,   0.0,0.0,        1.0,0.0,0.0,
-           0,1,0.1,0   ,  0.0,0.99,      0.0,1.0,0.0,
-           0.5,-0.5,0 ,   0.99,0.0,       0.0 ,0.0,1.0]
 
-triangleModel =Model(triangle,"witchkingcentered.obj","metal.jpg")
-triangleModel.position.z = -10
+triangleModel =Model("witchkingcentered.obj","metal.jpg")
+triangleModel.position.z = -20
 triangleModel.scale = glm.vec3(2,2,2)
 rend.scene.append(triangleModel)
 # rend = Renderer(screen)
@@ -54,28 +51,29 @@ while isRunning:
         elif ev.type == pygame.KEYDOWN:
             if ev.key == pygame.K_ESCAPE:
                 isRunning = False
-    # if keys[K_UP]:
-    #     if rend.ClearColor[0]<1:
-    #         rend.ClearColor[0]+=deltatime
-    # elif keys[K_DOWN]:
-    #     if rend.ClearColor[0]>0:
-    #         rend.ClearColor[0]-=deltatime
-    
-    
-    
-    
-    
-    
-    rend.target.y = rend.camPosition.y
-    
-    rend.camPosition.x = rend.target.x + sin(radians(rend.angle))* rend.camDistance
-    rend.camPosition.z = rend.target.z + cos(radians(rend.angle))* rend.camDistance
-    
+                
+                
+    if keys[K_w]:
+        rend.camPosition.z -= 5*deltatime
+               
+    elif keys[K_s]:
+        
+        rend.camPosition.z += 5*deltatime
+        
+    if keys[K_d]:
+        rend.camPosition.x -= 5*deltatime
+               
+    elif keys[K_a]:
+        
+        rend.camPosition.x += 5*deltatime
+    mousemovx, mousemovy = pygame.mouse.get_rel()
+    rend.light.x -= mousemovx
+    rend.light.y += mousemovy
+        
     
     
     rend.update()
-    triangleModel.rotation.y += 45*deltatime
-    # print(triangleModel.rotation.y)
+    triangleModel.rotation.y += 20*deltatime
     rend.render()
     
     rend.elapsedTime+= deltatime

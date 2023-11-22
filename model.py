@@ -2,10 +2,11 @@ from OpenGL.GL import *
 from numpy import array, float32
 import pygame
 import glm
+from mathcou import normalize
 from obj import Object
 
 class Model (object):
-    def __init__(self, data,fileName, texturename):
+    def __init__(self, fileName, texturename):
         
         # self.vertBuffer = array(data, dtype= float32)
         
