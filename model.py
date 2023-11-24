@@ -2,7 +2,7 @@ from OpenGL.GL import *
 from numpy import array, float32
 import pygame
 import glm
-from mathcou import normalize
+
 from obj import Object
 
 class Model (object):

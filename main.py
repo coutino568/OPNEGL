@@ -14,8 +14,8 @@ from shader import *
 
 
 
-width = 1000
-height = 1000
+width = 800
+height = 600
 
 pygame.init()
 screen = pygame.display.set_mode((width,height), pygame.DOUBLEBUF | pygame.OPENGL )
@@ -24,7 +24,10 @@ rend= Renderer(screen)
 
 clock = pygame.time.Clock()
 
-rend.setShaders(vertex_shader, fragment_shader)
+
+shaders= [fragment_shader_toon,fragment_shader,fragment_shader_black_and_white , fragment_shader_normal]
+shaderindex=0
+rend.setShaders(vertex_shader, fragment_shader_toon)
 
 
 
@@ -34,7 +37,7 @@ triangleModel.scale = glm.vec3(2,2,2)
 rend.scene.append(triangleModel)
 # rend = Renderer(screen)
 
-
+timesinceshaderchange =0
 
 
 
@@ -66,9 +69,22 @@ while isRunning:
     elif keys[K_a]:
         
         rend.camPosition.x += 5*deltatime
+        
+        
+        
+    elif keys[K_f]:
+        ##Solo para evitar que se cambie demasiado rapido de shader
+        if timesinceshaderchange > 1:
+            shaderindex = (shaderindex+1) % len(shaders)
+            rend.setShaders(vertex_shader, shaders[shaderindex])
+            timesinceshaderchange =0
+        
+        
+    
     mousemovx, mousemovy = pygame.mouse.get_rel()
-    rend.light.x -= mousemovx
-    rend.light.y += mousemovy
+    rend.light.x -= mousemovx*0.05
+    
+    # rend.light.y += mousemovy
         
     
     
@@ -77,6 +93,9 @@ while isRunning:
     rend.render()
     
     rend.elapsedTime+= deltatime
+    timesinceshaderchange+=deltatime
+    
+    
     pygame.display.flip()
  
 
